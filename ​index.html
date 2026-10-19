@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlRoot">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AI Social AutoPoster Pro - Studio</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #030508;
+      --card-bg: #0a0e16;
+      --border-color: rgba(212, 175, 55, 0.4);
+      --accent-gold: #d4af37;
+      --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7);
+      --accent-blue: #38bdf8;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+    }
+
+    [data-theme="light"] {
+      --bg-dark: #f8fafc;
+      --card-bg: #ffffff;
+      --border-color: rgba(212, 175, 55, 0.6);
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+    }
+
+    * {
+      box-sizing: border-box !important;
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    html, body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* صفحة الهبوط */
+    #landingPage {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+      background: var(--bg-dark); z-index: 1000;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 15px; text-align: center;
+    }
+
+    .landing-hero-box {
+      width: 100%; max-width: 500px; background: var(--card-bg); border: 1px solid var(--border-color);
+      padding: 25px 15px; border-radius: var(--radius-lg); box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .landing-title { font-size: 1.3rem; font-weight: 900; color: var(--accent-gold); margin-bottom: 10px; }
+    .landing-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; }
+
+    .btn-start-app {
+      background: var(--gold-gradient); color: #030508; border: none; padding: 12px 30px;
+      border-radius: 100px; font-weight: 900; font-size: 0.95rem; cursor: pointer;
+    }
+
+    /* التطبيق الرئيسي */
+    #appMain { display: none; width: 100%; max-width: 800px; margin: 0 auto; padding: 10px; }
+
+    header {
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+      background: var(--card-bg); border: 1px solid var(--border-color);
+      padding: 12px; border-radius: var(--radius-lg); margin-bottom: 12px; width: 100%;
+    }
+
+    .brand-box { display: flex; align-items: center; gap: 10px; }
+    .brand-icon {
+      width: 38px; height: 38px; border-radius: 10px; background: var(--gold-gradient);
+      display: flex; align-items: center; justify-content: center; color: #030508; font-size: 1.1rem;
+    }
+    .brand-text h1 { font-size: 0.95rem; font-weight: 900; color: var(--text-main); }
+    .brand-text span { font-size: 0.65rem; color: var(--text-muted); display: block; }
+
+    .header-actions { display: flex; align-items: center; gap: 6px; }
+
+    .btn-lang, .btn-theme-toggle {
+      background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color);
+      color: var(--accent-gold); padding: 6px 12px; border-radius: 10px; font-weight: 700; font-size: 0.75rem;
+      cursor: pointer; display: flex; align-items: center; gap: 5px;
+    }
+
+    .main-grid { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+
+    .panel-card {
+      background: var(--card-bg); border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg); padding: 12px; width: 100%; overflow: hidden;
+    }
+
+    .panel-title {
+      font-weight: 700; font-size: 0.85rem; margin-bottom: 10px; color: var(--accent-gold);
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      border-bottom: 1px solid var(--border-color); padding-bottom: 6px; width: 100%; text-align: center;
+    }
+
+    .ai-goal-box {
+      background: rgba(3, 5, 8, 0.04); border: 1px solid var(--border-color);
+      border-radius: var(--radius-md); padding: 10px; margin-bottom: 10px; width: 100%;
+    }
+    
+    .ai-goal-input {
+      width: 100%; background: var(--card-bg); border: 1px solid var(--border-color);
+      border-radius: 8px; padding: 8px; color: var(--text-main); font-size: 0.82rem; outline: none; margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .btn-ai-generate {
+      width: 100%; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; border: none;
+      padding: 10px; border-radius: 8px; font-weight: 900; font-size: 0.85rem; cursor: pointer;
+    }
+
+    textarea {
+      width: 100%; height: 160px; background: var(--card-bg); border: 1px solid var(--border-color);
+      border-radius: var(--radius-md); padding: 10px; color: var(--text-main); font-size: 0.82rem; outline: none;
+      resize: vertical; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .platform-item, .group-item {
+      display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 8px 10px; margin-bottom: 6px; width: 100%;
+    }
+    .platform-info { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.78rem; color: var(--text-main); }
+    .platform-info i { font-size: 0.95rem; color: var(--accent-gold); }
+
+    .btn-action-small {
+      background: rgba(212, 175, 55, 0.2); border: 1px solid var(--border-color); color: var(--text-main);
+      width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 0.72rem; flex-shrink: 0;
+    }
+
+    .btn-main-dispatch {
+      width: 100%; background: var(--gold-gradient); color: #030508; border: none; padding: 12px;
+      border-radius: 100px; font-weight: 900; font-size: 0.9rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 10px;
+    }
+
+    .add-group-form { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; width: 100%; }
+    .add-group-form input {
+      width: 100%; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-md);
+      padding: 8px; color: var(--text-main); font-size: 0.78rem; outline: none; text-align: center;
+    }
+    .btn-add-group {
+      width: 100%; background: rgba(212, 175, 55, 0.2); border: 1px solid var(--border-color); color: var(--text-main);
+      padding: 8px; border-radius: var(--radius-md); font-weight: 700; font-size: 0.78rem; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. صفحة الهبوط -->
+  <div id="landingPage">
+    <div class="landing-hero-box">
+      <div style="font-size: 2rem; color: var(--accent-gold); margin-bottom: 8px;"><i class="fa-solid fa-bullhorn"></i></div>
+      <div class="landing-title" id="landTitle">AI SOCIAL AUTOPOSTER PRO</div>
+      <div class="landing-desc" id="landDesc">منصتك الاحترافية الشاملة لإدارة ونشر الإعلانات والمحتوى (عربي / إنجليزي).</div>
+      <button class="btn-start-app" onclick="enterApp()" id="landBtn">
+        <i class="fa-solid fa-rocket"></i> ابدأ العمل الآن / Start Now
+      </button>
+    </div>
+  </div>
+
+  <!-- 2. التطبيق الرئيسي -->
+  <div id="appMain">
+    <header>
+      <div class="brand-box">
+        <div class="brand-icon"><i class="fa-solid fa-microchip"></i></div>
+        <div class="brand-text">
+          <h1>AUTOPOSTER PRO</h1>
+          <span>Ahmed Abu Omar Edition v11.8</span>
+        </div>
+      </div>
+      
+      <div class="header-actions">
+        <button class="btn-lang" onclick="toggleLanguage()">
+          <i class="fa-solid fa-globe"></i> <span id="langText">English</span>
+        </button>
+        <button class="btn-theme-toggle" onclick="toggleTheme()">
+          <i class="fa-solid fa-lightbulb" id="themeIcon"></i> <span id="themeText">الإضاءة</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="main-grid">
+      <div class="panel-card">
+        <div class="ai-goal-box">
+          <div class="panel-title" style="border:none; margin-bottom:4px; padding:0;">
+            <span id="goalLabel"><i class="fa-solid fa-bullseye" style="color:var(--accent-blue)"></i> أكتب هدف المنشور أو المنتج (ملابس، عقارات، إعلانات...):</span>
+          </div>
+          <input type="text" id="postGoal" class="ai-goal-input" placeholder="اكتب فكرة عرضك أو مجالك هنا...">
+          <button class="btn-ai-generate" onclick="generateSmartPostByAI()">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> <span id="genBtnText">توليد المنشور والهاشتاجات الذكية المتغيرة</span>
+          </button>
+        </div>
+
+        <div class="panel-title">
+          <span id="postResultTitle"><i class="fa-solid fa-pen-nib"></i> المنشور التسويقي الناتج (جاهز للنشر والإعلانات)</span>
+        </div>
+
+        <textarea id="post-content">🔥 عرض خاص لفترة محدودة: احصل على الأداة الآن بسعر 10$ فقط (بدلاً من 25$) بخصم 60% مفعل مباشرة!
+⚡ تواصل معنا الآن لتحصل على أفضل الأسعار والخدمات بأعلى جودة.
+📲 تواصل معنا الآن عبر الواتساب لمعرفة تفاصيل الطلب:
+https://wa.me/201206443652
+
+#عروض_حصرية #تسويق_رقمي #تخفيضات #متاجر_إلكترونية #specialoffer #shopping #marketing #ecommerce #sales</textarea>
+
+        <button class="btn-main-dispatch" onclick="startAutoDispatch()">
+          <i class="fa-solid fa-paper-plane"></i> <span id="dispatchBtnText">نسخ المنشور وتوجيه لكافة منصات الإعلانات</span>
+        </button>
+      </div>
+
+      <!-- منصات السوشيال ميديا وإعلاناتها -->
+      <div class="panel-card">
+        <div class="panel-title" id="platformsTitle"><i class="fa-solid fa-rectangle-ad"></i> منصات النشر والإعلانات (Ads)</div>
+        
+        <div class="platform-item">
+          <div class="platform-info"><i class="fa-brands fa-facebook" style="color:#1877f2;"></i> Facebook Ads Manager</div>
+          <button class="btn-action-small" onclick="openPlatform('fb')"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+        </div>
+
+        <div class="platform-item">
+          <div class="platform-info"><i class="fa-brands fa-instagram" style="color:#e1306c;"></i> Instagram Ads</div>
+          <button class="btn-action-small" onclick="openPlatform('insta')"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+        </div>
+
+        <div class="platform-item">
+          <div class="platform-info"><i class="fa-brands fa-tiktok" style="color:#00f2fe;"></i> TikTok Ads Manager</div>
+          <button class="btn-action-small" onclick="openPlatform('tiktok')"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+        </div>
+
+        <div class="platform-item">
+          <div class="platform-info"><i class="fa-brands fa-snapchat" style="color:#fffc00;"></i> Snapchat Ads Manager</div>
+          <button class="btn-action-small" onclick="openPlatform('snapchat')"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-title" id="groupsTitle"><i class="fa-solid fa-users-rectangle"></i> استهداف المجموعات</div>
+        
+        <div class="add-group-form">
+          <input type="text" id="group-name" placeholder="اسم المجموعة">
+          <input type="text" id="group-url" placeholder="رابط المجموعة">
+          <button class="btn-add-group" onclick="addGroup()"><i class="fa-solid fa-plus"></i> <span id="addGroupBtnText">إضافة المجموعة</span></button>
+        </div>
+
+        <div id="groups-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentLang = 'ar';
+    let currentTheme = 'dark';
+
+    const translations = {
+      ar: {
+        landTitle: "AI SOCIAL AUTOPOSTER PRO",
+        landDesc: "منصتك الاحترافية الشاملة لإدارة ونشر الإعلانات والمحتوى (عربي / إنجليزي).",
+        landBtn: "ابدأ العمل الآن",
+        langText: "English",
+        themeText: "الإضاءة",
+        goalLabel: "أكتب هدف المنشور أو المنتج (ملابس، عقارات، إعلانات...):",
+        goalPlace: "اكتب فكرة عرضك أو مجالك هنا...",
+        genBtnText: "توليد المنشور والهاشتاجات الذكية المتغيرة",
+        postResultTitle: "المنشور التسويقي الناتج (جاهز للنشر والإعلانات)",
+        dispatchBtnText: "نسخ المنشور وتوجيه لكافة منصات الإعلانات",
+        platformsTitle: "منصات النشر والإعلانات (Ads)",
+        groupsTitle: "استهداف المجموعات",
+        addGroupBtnText: "إضافة المجموعة"
+      },
+      en: {
+        landTitle: "AI SOCIAL AUTOPOSTER PRO",
+        landDesc: "Your ultimate platform for intelligent content management & ads posting (Arabic / English).",
+        landBtn: "Start Now",
+        langText: "العربية",
+        themeText: "Lighting",
+        goalLabel: "Write Post Goal or Product:",
+        goalPlace: "Write your offer or niche here...",
+        genBtnText: "Generate Post & Dynamic Hashtags",
+        postResultTitle: "Generated Marketing Post (Ready for Ads)",
+        dispatchBtnText: "Copy Post & Dispatch to All Ad Platforms",
+        platformsTitle: "Ad Platforms & Networks",
+        groupsTitle: "Groups Targeting",
+        addGroupBtnText: "Add Group"
+      }
+    };
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'ar' ? 'en' : 'ar';
+      const root = document.getElementById('htmlRoot');
+      root.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+      root.setAttribute('lang', currentLang);
+
+      const t = translations[currentLang];
+      document.getElementById('landTitle').innerText = t.landTitle;
+      document.getElementById('landDesc').innerText = t.landDesc;
+      document.getElementById('landBtn').innerHTML = `<i class="fa-solid fa-rocket"></i> ${t.landBtn}`;
+      document.getElementById('langText').innerText = t.langText;
+      document.getElementById('themeText').innerText = t.themeText;
+      document.getElementById('goalLabel').innerHTML = `<i class="fa-solid fa-bullseye" style="color:var(--accent-blue)"></i> ${t.goalLabel}`;
+      document.getElementById('postGoal').placeholder = t.goalPlace;
+      document.getElementById('genBtnText').innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> ${t.genBtnText}`;
+      document.getElementById('postResultTitle').innerHTML = `<i class="fa-solid fa-pen-nib"></i> ${t.postResultTitle}`;
+      document.getElementById('dispatchBtnText').innerHTML = `<i class="fa-solid fa-paper-plane"></i> ${t.dispatchBtnText}`;
+      document.getElementById('platformsTitle').innerHTML = `<i class="fa-solid fa-rectangle-ad"></i> ${t.platformsTitle}`;
+      document.getElementById('groupsTitle').innerHTML = `<i class="fa-solid fa-users-rectangle"></i> ${t.groupsTitle}`;
+      document.getElementById('addGroupBtnText').innerText = t.addGroupBtnText;
+    }
+
+    function toggleTheme() {
+      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      const root = document.getElementById('htmlRoot');
+      const icon = document.getElementById('themeIcon');
+      if(currentTheme === 'light') {
+        root.setAttribute('data-theme', 'light');
+        icon.className = "fa-solid fa-moon";
+      } else {
+        root.removeAttribute('data-theme');
+        icon.className = "fa-solid fa-lightbulb";
+      }
+    }
+
+    function enterApp() {
+      document.getElementById('landingPage').style.display = 'none';
+      document.getElementById('appMain').style.display = 'block';
+      renderGroups();
+    }
+
+    let links = {
+      fb: 'https://adsmanager.facebook.com/',
+      insta: 'https://adsmanager.instagram.com/',
+      tiktok: 'https://ads.tiktok.com/',
+      snapchat: 'https://ads.snapchat.com/'
+    };
+
+    let groups = JSON.parse(localStorage.getItem('poster_groups')) || [];
+
+    function getDynamicHashtags(goal) {
+      const g = goal.toLowerCase();
+      if (g.includes('ملابس') || g.includes('ازياء') || g.includes('موضة') || g.includes('clothes') || g.includes('fashion')) {
+        return "#ملابس_رجالي #أزياء_عصرية #موضة_2026 #تسوق_اونلاين #fashion #clothes #onlineshopping #style #ootd";
+      } else if (g.includes('عقار') || g.includes('شقق') || g.includes('فلل') || g.includes('real estate') || g.includes('apartment')) {
+        return "#عقارات_للبيع #شقق_للايجار #استثمار_عقاري #فلل_فاخرة #realestate #properties #apartments #investment";
+      } else if (g.includes('برمجة') || g.includes('موقع') || g.includes('تطوير') || g.includes('code') || g.includes('web')) {
+        return "#تطوير_المواقع #برمجة_وتطوير #تصميم_مواقع #webdesign #programming #coding #developer #saas";
+      } else if (g.includes('تسويق') || g.includes('إعلان') || g.includes('marketing') || g.includes('ads')) {
+        return "#تسويق_رقمي #إعلانات_ممولة #زيادة_المبيعات #digitalmarketing #adsmanager #marketingstrategy #sales";
+      } else {
+        return `#عروض_حصرية #إعلانات_مميزة #${goal.replace(/\s+/g, '_')} #specialoffer #ads #trending #bestquality`;
+      }
+    }
+
+    function generateSmartPostByAI() {
+      const goal = document.getElementById('postGoal').value.trim();
+      if (!goal) {
+        alert(currentLang === 'ar' ? 'الرجاء كتابة فكرة العرض أو المنتج أولاً!' : 'Please enter your offer or product first!');
+        return;
+      }
+
+      const smartHashtags = getDynamicHashtags(goal);
+
+      const textarea = document.getElementById('post-content');
+      textarea.value = `🔥 احدث العروض الحصرية: ${goal} !\n🔥 Latest Exclusive Offer: ${goal} !\n\n` +
+                       `💰 السعر الأساسي 25$ - احصل عليه الآن بـ 10$ فقط (بدلاً من 25$) بخصم 60% مفعل مباشرة!\n\n` +
+                       `📲 تواصل معنا مباشرة عبر الواتساب (01206443652) لمعرفة التفاصيل:\n` +
+                       `👉 https://wa.me/201206443652\n\n` +
+                       `${smartHashtags}`;
+
+      alert(currentLang === 'ar' ? '✨ تم توليد المنشور والأسعار والهاشتاجات الذكية بنجاح!' : '✨ Post, pricing, and dynamic hashtags generated successfully!');
+    }
+
+    function saveStorage() {
+      localStorage.setItem('poster_groups', JSON.stringify(groups));
+      renderGroups();
+    }
+
+    function addGroup() {
+      const name = document.getElementById('group-name').value.trim();
+      const url = document.getElementById('group-url').value.trim();
+      if(name && url) {
+        groups.push({ name, url });
+        document.getElementById('group-name').value = '';
+        document.getElementById('group-url').value = '';
+        saveStorage();
+      }
+    }
+
+    function removeGroup(idx) {
+      groups.splice(idx, 1);
+      saveStorage();
+    }
+
+    function renderGroups() {
+      const list = document.getElementById('groups-list');
+      if(!list) return;
+      list.innerHTML = '';
+      groups.forEach((g, idx) => {
+        list.innerHTML += `
+          <div class="group-item">
+            <span style="font-size:0.78rem; font-weight:700;"><i class="fa-solid fa-user-group" style="color:var(--accent-gold); margin-left:6px;"></i> ${g.name}</span>
+            <div style="display:flex; gap:6px;">
+              <button class="btn-action-small" onclick="openCustomUrl('${g.url}')"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+              <button class="btn-action-small" style="color:#ef4444;" onclick="removeGroup(${idx})"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function openPlatform(key) {
+      const fullContent = document.getElementById('post-content').value.trim();
+      navigator.clipboard.writeText(fullContent);
+      alert(currentLang === 'ar' ? 'تم نسخ المنشور للحافظة! جاري التوجه لمدير الإعلانات...' : 'Post copied! Opening ads manager...');
+      if(links[key]) window.open(links[key], '_blank');
+    }
+
+    function openCustomUrl(url) {
+      const fullContent = document.getElementById('post-content').value.trim();
+      navigator.clipboard.writeText(fullContent);
+      alert(currentLang === 'ar' ? 'تم نسخ المنشور للحافظة! جاري التوجه للمجموعة...' : 'Post copied! Opening group...');
+      if(url) window.open(url, '_blank');
+    }
+
+    function startAutoDispatch() {
+      const fullContent = document.getElementById('post-content').value.trim();
+      navigator.clipboard.writeText(fullContent);
+      alert(currentLang === 'ar' ? 'تم نسخ المنشور بالكامل! سيتم فتح مدراء إعلانات فيسبوك، إنستجرام، تيك توك وسناب شات الآن.' : 'Full post copied! Opening all ads managers.');
+      Object.values(links).forEach(url => { if(url) window.open(url, '_blank'); });
+      groups.forEach(g => { if(g.url) window.open(g.url, '_blank'); });
+    }
+  </script>
+</body>
+</html>
